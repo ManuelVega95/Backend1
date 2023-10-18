@@ -1,0 +1,62 @@
+class ProductManager {productos
+    constructor(id, title, description, price, thumbnail, code, stock){
+        this.id = this.productos.lenght + 1,
+        this.productos = [];
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.thumbnail = thumbnail;
+        this.code = code;
+        this.stock = stock;
+    }
+
+    addProducts = (title, description, price, thumbnail, code, stock) => {
+        const productosIndex = this.productos.findIndex((productos) => productos.code === code)
+        if (!title || !description || !price || !thumbnail || !code || !stock) {
+            console.log("Error. Se requieren todos los campos.");
+            return;
+        }
+        if (stock < 0 ) {
+            console.log ("Error: stock negativo")
+            return;
+        }
+        if (productIndex === -1) {
+            const prod = {
+                id: this.productos.lenght + 1,
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock
+            }
+            this.productos.push(prod);
+            console.log("Se agregó el código: ${code}");
+        }
+            else {
+                console.log ("Error: Ya existe el código: ${code}")
+            }
+        }
+
+    getProducts(){
+        return this.productos
+    }
+    
+    getProductById = (prodId) => {
+        const prodIdFound = this.products.findIndex ((prod) => prod.id === prodId); 
+        if (prodIdFound === -1){
+            console.log ("No se encuentra el producto con el Id: ${prodId}");
+        } else {
+            console.log("El id es el siguiente ${prodId}")
+        }
+        console.log(this.productos[prodIdFound]);
+        }
+    }
+const pm = new ProductManager()
+
+const p1 = pm.addProducts({title: 'Remera', description: 'Ropa', price: 2000, thumbnail: 'Sin imagen', code: 'c1', stock: 15})
+const p2 = pm.addProducts({title: 'Pantalón', description: 'Ropa', price: 3500, thumbnail: 'Sin imagen', code: 'c2', stock: 10})
+
+const productos = [p1, p2]
+
+console.log(p1, p2)
