@@ -1,0 +1,147 @@
+import {promises as fs} from "fs"
+
+class ProductManager {
+
+    constructor() {
+      this.patch = "./productos.txt"
+      this.products  = []
+      this.productIdCounter = 1;
+    }
+    static id = 0
+
+    addProducts = async ( title, description, price, thumbnail, code, stock ) => {
+
+        ProductManager.id++
+        let newProduct = {
+          title,
+          description,
+          price,
+          thumbnail,
+          code,
+          stock,
+          id: ProductManager.id
+        }
+        this.products.push(newProduct);
+
+        await fs.writeFile(this.patch, JSON.stringify (this.products));
+
+        try {
+            if (this.products.some((product) => product.code === code)) {
+              return console.error(
+                'Error: El código ya existe en la lista de productos.'
+              );
+            }
+       
+            if (
+              !title ||
+              !description ||
+              !price ||
+              !thumbnail ||
+              !code ||
+              stock < 0
+            ) {
+              return console.log(
+                'Error. Se requieren todos los campos y el stock no puede ser negativo.'
+              );
+            }
+       
+            const prod = {
+              id: this.productIdCounter++,
+              title,
+              description,
+              price,
+              thumbnail,
+              code,
+              stock,
+            };
+            this.products.push(prod);
+            return console.log(`Se agregó el código: ${code}`);
+          } catch (error) {
+            return console.error('Error: ', error);
+          }
+    }
+
+    readProducts = async () => {
+        let rp = await fs.readFile (this.patch, "utf-8")
+        return JSON.parse(rp)
+    }
+
+    getProducts = async () =>{
+        let gp = await this.readProducts()
+        return console.log(gp)    
+    }
+    
+    getProductById = async (prodId) =>{
+        let gpbi = await this.readProducts();
+        if(!gpbi.find((products) => products.prodId === id)){
+            console.log(`No se encuentra el producto con el id: ${prodId}`)
+        } else{
+            console.log(gpbi.find((products) => products.prodId))
+        }
+        const prodIdFound = this.products.find((prod) => prod.id === prodId);
+    }
+
+    deleteProductsById = async (prodId) =>{
+        let gbpi = await this.readProducts()
+        let pFilter = gbpi.filter(products => products.prodId != prodId)
+        console.log(pFilter)
+        await fs.writeFile(this.patch, JSON.stringify (this.pFilter));
+        console.log(`Se eliminó el producto con el id: ${prodId}`)
+    }
+
+    updateProductsById = async ({id, ... producto}) => {
+        await this.deleteProductsById(id);
+        let prodOld = await this.readProducts();
+        let prodNew = [{...producto, id}, ...prodOld];
+        await fs.writeFile(this.patch, JSON.stringify (pFilter));
+        console.log(`Se modificó el producto con el id: ${prodId}`)
+    }
+}
+
+
+const pm  = new ProductManager();
+
+
+/*pm.addProducts({
+  title: 'Remera',
+  description: 'Ropa',
+  price: 2000,
+  thumbnail: 'Sin imagen',
+  code: 'c1',
+  stock: 15,
+});
+pm.addProducts({
+  title: 'Pantalón',
+  description: 'Ropa',
+  price: 3500,
+  thumbnail: 'Sin imagen',
+  code: 'c2',
+  stock: 10,
+});
+pm.addProducts({
+    title: 'Medias',
+    description: 'Calzado',
+    price: 500,
+    thumbnail: 'Sin imagen',
+    code: 'c3',
+    stock: 50,
+  });
+
+console.log(pm.getProductById(1));
+console.log(pm.getProductById(4));
+
+console.log(pm.getProducts());
+
+pm.getProducts()
+
+pm.deleteProductsById(1)
+
+pm.updateProductsById(1)
+  title: 'Remera',
+  description: 'Ropa',
+  price: 2300,
+  thumbnail: 'Sin imagen',
+  code: 'c1',
+  stock: 15,
+  id: 1;
+*/
