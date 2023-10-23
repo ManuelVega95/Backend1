@@ -1,0 +1,82 @@
+class ProductManager {
+  //En el constructor solamente el array y el id
+  constructor() {
+    this.products = [];
+    this.productIdCounter = 1;
+  }
+
+  addProducts = ({ title, description, price, thumbnail, code, stock }) => {
+    //Manejamos los errores con el trycatch
+    try {
+      if (this.products.some((product) => product.code === code)) {
+        return console.error(
+          'Error: El código ya existe en la lista de productos.'
+        );
+      }
+
+      if (
+        !title ||
+        !description ||
+        !price ||
+        !thumbnail ||
+        !code ||
+        stock < 0
+      ) {
+        return console.log(
+          'Error. Se requieren todos los campos y el stock no puede ser negativo.'
+        );
+      }
+
+      const prod = {
+        id: this.productIdCounter++,
+        title,
+        description,
+        price,
+        thumbnail,
+        code,
+        stock,
+      };
+      this.products.push(prod);
+      return console.log(`Se agregó el código: ${code}`);
+    } catch (error) {
+      return console.error('Error: ', error);
+    }
+  };
+
+  getProducts() {
+    return this.products;
+  }
+
+  getProductById = (prodId) => {
+    //Buscamos el productoId en el array
+    const prodIdFound = this.products.find((prod) => prod.id === prodId);
+    if (prodIdFound) {
+      return console.log(prodIdFound);
+    }
+    return console.log(`No se encuentra el producto con el Id: ${prodId}`);
+  };
+}
+
+const pm = new ProductManager();
+
+pm.addProducts({
+  title: 'Remera',
+  description: 'Ropa',
+  price: 2000,
+  thumbnail: 'Sin imagen',
+  code: 'c1',
+  stock: 15,
+});
+pm.addProducts({
+  title: 'Pantalón',
+  description: 'Ropa',
+  price: 3500,
+  thumbnail: 'Sin imagen',
+  code: 'c2',
+  stock: 10,
+});
+
+console.log(pm.getProductById(1));
+console.log(pm.getProductById(4));
+
+console.log(pm.getProducts());
